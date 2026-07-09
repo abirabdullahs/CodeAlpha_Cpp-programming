@@ -1,39 +1,78 @@
 #include <iostream>
-#include <iomanip>
+#include <vector>
+#include <fstream>
 using namespace std;
 
 int main() {
     int n;
-    double grade, credit;
-    double totalGradePoints = 0;
-    double totalCredits = 0;
-
-    cout << "Enter the number of courses: ";
+    cout << "Enter number of courses: ";
     cin >> n;
 
-    cout << "\nEnter Grade Point and Credit Hour for each course:\n";
+    double grade;
+    int credit;
 
-    for (int i = 1; i <= n; i++) {
-        cout << "\nCourse " << i << endl;
+    double totalGradePoint = 0;
+    int totalCredit = 0;
 
+    vector<double> gradePoints;
+
+  
+    for (int i = 0; i < n; i++) {
+        cout << "\nCourse " << i + 1 << endl;
         cout << "Grade Point: ";
         cin >> grade;
 
         cout << "Credit Hour: ";
         cin >> credit;
 
-        totalGradePoints += grade * credit;
-        totalCredits += credit;
+        double gradePoint = grade * credit;
+
+        totalGradePoint += gradePoint;
+        totalCredit += credit;
+
+        gradePoints.push_back(gradePoint);
     }
 
-    double cgpa = totalGradePoints / totalCredits;
+  
+    cout << "\n===== Course Grade Points =====\n";
+    for (size_t i = 0; i < gradePoints.size(); i++) {
+        cout << "Course " << i + 1 << " : " << gradePoints[i] << endl;
+    }
 
-    cout << fixed << setprecision(2);
 
-    cout << "\n========== RESULT ==========\n";
-    cout << "Total Credit Hours : " << totalCredits << endl;
-    cout << "Total Grade Points : " << totalGradePoints << endl;
-    cout << "Final CGPA         : " << cgpa << endl;
+    double gpa = totalGradePoint / totalCredit;
+
+    cout << "\nSemester GPA = " << gpa << endl;
+
+  
+    ofstream outfile("data.txt", ios::app);
+
+    if (outfile.is_open()) {
+        outfile << totalGradePoint << " " << totalCredit << endl;
+        outfile.close();
+    }
+
+    
+    ifstream infile("data.txt");
+
+    double semesterGradePoint;
+    int semesterCredit;
+
+    double grandTotalGradePoint = 0;
+    int grandTotalCredit = 0;
+
+    while (infile >> semesterGradePoint >> semesterCredit) {
+        grandTotalGradePoint += semesterGradePoint;
+        grandTotalCredit += semesterCredit;
+    }
+
+    infile.close();
+
+   
+    double cgpa = grandTotalGradePoint / grandTotalCredit;
+
+    cout << "\n===== Overall CGPA =====" << endl;
+    cout << cgpa << endl;
 
     return 0;
 }
